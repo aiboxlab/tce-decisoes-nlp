@@ -26,7 +26,7 @@ async def read_items():
 
 
 @router.post("/summarize", response_model=List[str])
-async def read_item(request: RequestBody = Body(...)):
+async def summarize(request: RequestBody = Body(...)):
 
     doc = Document(request.text)
     return doc.get_summary(3)
