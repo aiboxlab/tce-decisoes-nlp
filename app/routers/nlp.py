@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, Body, Request
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
 from ..tce_nlp import Document
@@ -20,6 +21,27 @@ class RequestBody(BaseModel):
     text: str
 
 
+class Features(BaseModel):
+    text: str
+    dictionary: dict
+    html_summary: List
+    summary: List
+    html: str
+    sentiments: dict
+    topics: dict
+
+
+# {
+#             "text": self.get_text(),
+#             "dictionary": self.get_dictionary(),
+#             "html_summary": html_summary,
+#             "summary": self.summary,
+#             "html": self.get_glossary_html(),
+#             "sentiments": self.get_sentiments(self.summary),
+#             "topics": self.get_topics(self.summary)
+#         }
+
+
 @router.get("/")
 async def read_items():
     return fake_items_db
@@ -27,9 +49,14 @@ async def read_items():
 
 @router.post("/summarize", response_model=List[str])
 async def summarize(request: RequestBody = Body(...)):
-
     doc = Document(request.text)
     return doc.get_summary(3)
+
+
+@router.post("/features")
+async def summarize(request: RequestBody = Body(...)):
+    doc = Document(request.text)
+    return jsonable_encoder(doc.get_features_dict())
 
 
 @router.put(

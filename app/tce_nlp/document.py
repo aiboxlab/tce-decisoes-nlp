@@ -157,7 +157,7 @@ class Document:
         for sentence in sentences:
             classification = sentiment_classifier.predict([sentence])
 
-            self.sentiments.append({"sentence": sentence, "sentiments": classification[0]})
+            self.sentiments.append({"sentence": sentence, "sentiments": int(classification[0])})
 
         return self.sentiments
 
@@ -165,7 +165,7 @@ class Document:
 
         for sentence in sentences:
             classification = topic_classifier.predict([sentence])
-            self.topics.append({"sentence": sentence, "topic": classification[0]})
+            self.topics.append({"sentence": sentence, "topic": int(classification[0])})
 
         return self.topics
 
