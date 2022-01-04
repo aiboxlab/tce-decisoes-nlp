@@ -1,4 +1,5 @@
 import json
+import os
 import pickle
 import re
 
@@ -11,17 +12,17 @@ from htmlBuilder.tags import *
 from spacy import displacy
 from spacy.matcher import Matcher
 from typing import List, Iterable
-from tools.ner.regex_ner import get_regex_dict
-from tools.preprocess.text_preprocess import preprocess_pipeline
-from tools.summarization import py_summarize
-from util.util import PATTERNS
+from ..tce_nlp.tools.ner.regex_ner import get_regex_dict
+from ..tce_nlp.tools.preprocess.text_preprocess import preprocess_pipeline
+from ..tce_nlp.tools.summarization import py_summarize
+from ..tce_nlp.util.util import PATTERNS
 
 nltk.download('rslp')
 
-sentiment = open("tce_nlp/resources/SentimentAnalysis.sav", "rb")
+sentiment = open("app/tce_nlp/resources/SentimentAnalysis.sav", "rb")
 sentiment_classifier = pickle.load(sentiment)
 
-topic = open("tce_nlp/resources/TopicClassification.sav", "rb")
+topic = open("app/tce_nlp/resources/SentimentAnalysis.sav", "rb")
 topic_classifier = pickle.load(topic)
 
 
@@ -43,7 +44,7 @@ def displacy_ner(text):
 
 class Document:
     nlp_model = spacy.load('pt_core_news_lg')
-    word_dict = json.load(open('legalbr_nlp/resources/glossario.json'))
+    word_dict = json.load(open('app/tce_nlp/resources/glossario.json'))
     sentiments_model = None
     topic_model = None
 

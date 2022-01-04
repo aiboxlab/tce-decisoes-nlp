@@ -1,18 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException, Body, Request
+from pydantic import BaseModel
 
+from ..tce_nlp import Document
 from ..dependencies import get_token_header
 
-
 router = APIRouter(
-    prefix="/items",
-    tags=["items"],
-    dependencies=[Depends(get_token_header)],
+    prefix="/tce_nlp",
+    tags=["TCE NLP"],
+
     responses={404: {"description": "Not found"}},
 )
 
-
 fake_items_db = {"plumbus": {"name": "Plumbus"}, "gun": {"name": "Portal Gun"}}
+
+
+class RequestBody(BaseModel):
+    text: str
 
 
 @router.get("/")
@@ -20,11 +25,11 @@ async def read_items():
     return fake_items_db
 
 
-@router.get("/{item_id}")
-async def read_item(item_id: str):
-    if item_id not in fake_items_db:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return {"name": fake_items_db[item_id]["name"], "item_id": item_id}
+@router.post("/summarize", response_model=List[str])
+async def read_item(request: RequestBody = Body(...)):
+
+    doc = Document(request.text)
+    return doc.get_summary(3)
 
 
 @router.put(
