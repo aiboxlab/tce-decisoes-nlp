@@ -8,7 +8,7 @@ from ..tce_nlp import Document
 from ..dependencies import get_token_header
 
 router = APIRouter(
-    prefix="/tce_nlp",
+    prefix="/nlp",
     tags=["TCE NLP"],
 
     responses={404: {"description": "Not found"}},
